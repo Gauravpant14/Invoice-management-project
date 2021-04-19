@@ -1,166 +1,143 @@
 import React, { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
-import Datepicker from './Datepicker';
-import { Container, Row, Col } from 'reactstrap';
+import Datepicker from "./Datepicker";
+import { Container, Row, Col } from "reactstrap";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { useSelector, useDispatch } from 'react-redux'
-import { postInvoiceData } from './../Redux/Action/FormAction'
-import { CompanyData } from './../Redux/Action/ToCompanies'
+import { useSelector, useDispatch } from "react-redux";
+import { postInvoiceData } from "./../Redux/Action/FormAction";
+import { CompanyData } from "./../Redux/Action/ToCompanies";
 import { postLoginData } from "./../../src/Redux/Action/LoginAction";
 import {
   BrowserRouter as Router,
   Switch,
   Route,
   Link,
-  Redirect
+  Redirect,
 } from "react-router-dom";
 
 const Form = ({ history, location }) => {
-
-
-
   const [state1, setstate1] = useState({
-    "from": '',
-    "to": '',
-    "createdBy": '',
-    "items": {
-      "productName": '',
-      "quantity": '',
-      "description": '',
-      "unitPrice": '',
-      "total": ''
+    from: "",
+    to: "",
+    createdBy: "",
+    items: {
+      productName: "",
+      quantity: "",
+      description: "",
+      unitPrice: "",
+      total: "",
     },
-    "dueDate": '',
-    "status": ''
-  })
+    dueDate: "",
+    status: "",
+  });
 
-  // const [addMore, setAddmore] = useState({
-  //   items: [
-  //     {
-  //       productName: "",
-  //       quantity: "",
-  //       description: "",
-  //       unitPrice: "",
-  //       total: "",
-  //     },
-  //   ],
-  // });
+  const [addMore, setAddmore] = useState({
+    items: [
+      {
+        productName: "",
+        quantity: "",
+        description: "",
+        unitPrice: "",
+      },
+    ],
+  });
 
-  // const addItems = (e) => {
-  //   e.preventDefault();
-  //   setAddmore((prevState) => ({
-  //     //here hName was newCon
-  //     items: [
-  //       ...prevState.items,
-  //       {
-  //         productName: "",
-  //         quantity: "",
-  //         description: "",
-  //         unitPrice: "",
-  //         total: "",
-  //       },
-  //     ],
-  //   }));
-  // };
+  const addItems = (e) => {
+    e.preventDefault();
+    setAddmore((prevState) => ({
+      //here hName was newCon
+      items: [
+        ...prevState.items,
+        {
+          productName: "",
+          quantity: "",
+          description: "",
+          unitPrice: "",
+        },
+      ],
+    }));
+  };
 
-
-
-
-
-  const state = useSelector(state => state)
-  const dispatch = useDispatch()
-  const { control, register, handleSubmit, formState: { errors } } = useForm();
-
+  const state = useSelector((state) => state);
+  const dispatch = useDispatch();
+  const {
+    control,
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
   useEffect(() => {
     dispatch(CompanyData());
-    dispatch(postLoginData())
-    console.log(location.state, "user reg data in form")
-    console.log(selectedOrg, "sel org")
-    console.log(selectedOrg, "gggggggggggggggggggggggggggggggggggggggggggggg")
+    dispatch(postLoginData());
+    console.log(location.state, "user reg data in form");
+    console.log(selectedOrg, "sel org");
+    console.log(selectedOrg, "gggggggggggggggggggggggggggggggggggggggggggggg");
     // console.log(selOrg,"local s data")
-  }, [])
+  }, []);
   // const onSubmit = (invoicedata) => dispatch(postInvoiceData
-
 
   //   (invoicedata));
   const getValues = (invoicedata) => {
     setstate1({
-      "from": invoicedata.from,
-      "to": invoicedata.to,
-      "createdBy": invoicedata.createdBy,
-      "items": {
-        "productName": invoicedata.ProductName,
-        "quantity": invoicedata.quantity,
-        "description": invoicedata.Description,
-        "unitPrice": invoicedata.unitPrice,
-        "total": invoicedata.total
+      from: invoicedata.from,
+      to: invoicedata.to,
+      createdBy: invoicedata.createdBy,
+      items: {
+        productName: invoicedata.ProductName,
+        quantity: invoicedata.quantity,
+        description: invoicedata.Description,
+        unitPrice: invoicedata.unitPrice,
+        total: invoicedata.total,
       },
-      "dueDate": invoicedata.dueDate,
-      "status": invoicedata.status
-    })
-
-    setTimeout(() => {
-
-    }, 500);
-
-
-  }
-
+      dueDate: invoicedata.dueDate,
+      status: invoicedata.status,
+    });
+  };
 
   const onSubmit = (invoicedata) => {
-    //  getValues(invoicedata)
-    dispatch(postInvoiceData(invoicedata, history))
-    console.log(invoicedata)
-
-    // setTimeout(() => {
-
-    //   history.push("/download")
-    // }, 1000);
-    // 
-    // console.log(object)
-
-    // console.log("dispatched data",state.companyId.to);
-
-  }
-
+    dispatch(postInvoiceData(invoicedata, history));
+    console.log(invoicedata);
+  };
 
   const logoutFun = () => {
     localStorage.clear();
     history.push("/");
+  };
+
+  const deleteItem = (e, index) => {
+    console.log(index, "index issssssssssssssssssssssssssssss");
+    const values = [...addMore.items];
+    console.log(values, "we are che");
+    values.splice(index, 1);
+    console.log(values, "cut val");
+    setAddmore({
+      items: values,
+    });
+  };
+
+  const selectedOrg = JSON.parse(localStorage.getItem("selected_company"));
+
+  if (localStorage.getItem("user_token")) {
+    <Redirect push to="/form" />;
+  } else {
+    <Redirect push to="/" />;
   }
 
-
-  const selectedOrg = JSON.parse(localStorage.getItem("selected_company"))
-
-
-
-
-
-
-     
-if (localStorage.getItem('user_token'))
-{
-  <Redirect push to="/form"/>
-}
-else
-{<Redirect push to="/"/>}
-
-
   return (
-
     <>
       <Container>
         <div className="outer">
           {/* {JSON.stringify(state1)} */}
           <form onSubmit={handleSubmit(onSubmit)} className="form-data">
-            <h5 className="top-head"><b >INVOICE MANAGEMENT</b></h5>
+            <h5 className="top-head">
+              <b>INVOICE MANAGEMENT</b>
+            </h5>
             <Row className="firstRow">
               <Col md="4">
                 <label for="status">From</label>
                 <select {...register("from")} className="select1">
-
                   {selectedOrg.map((e) => (
                     <option value={e.id}>{e.companyName}</option>
                   ))}
@@ -171,22 +148,14 @@ else
               </Col>
               <Col md="4">
                 <label for="Created By">Created By </label>
-                <input
-                  type="text"
-                  {...register('createdBy', {
-
-                  })}
-                />
-
+                <input type="text" {...register("createdBy", {})} />
               </Col>
               <Col md="4">
                 <label for="To">To</label>
                 <select {...register("to")} className="select">
-
-                  {state.companyId.to.map((e) =>
+                  {state.companyId.to.map((e) => (
                     <option value={e.id}>{e.name}</option>
-                  )}
-
+                  ))}
                 </select>
               </Col>
             </Row>
@@ -194,48 +163,33 @@ else
             <Row className="firstRow">
               <Col md="3">
                 <label for="Notes">Notes</label>
-                <input
-                  type="text"
-                  {...register('Notes', {
-
-                  })}
-                />
+                <input type="text" {...register("Notes", {})} />
               </Col>
-
 
               <Col md="3">
                 <label for="product name">Product Name</label>
                 <input
                   type="text"
-                  {...register('ProductName', {
-                    required: true
-
-
+                  {...register("ProductName", {
+                    required: true,
                   })}
-
-
                 />
                 <p className="para">
                   {errors.ProductName && "Password is required*"}
                 </p>
-
-
               </Col>
 
               <Col md="3">
                 <label for="Quantity">Quantity</label>
                 <input
                   type="text"
-                  {...register('quantity', {
-                    required: true
-
-
+                  {...register("quantity", {
+                    required: true,
                   })}
                 />
                 <p className="para">
                   {errors.quantity && "Password is required*"}
                 </p>
-
               </Col>
 
               <Col md="3">
@@ -249,69 +203,45 @@ else
                   }
                   />  */}
 
-
-                {<Controller name="dueDate" control={control} defaultValue={null}
-                  render={
-                    (p) => {
-                      console.log(`onChange, value`, p.fields)
-                      return <DatePicker selected={p.field.value}
-                        placeholderText="select date   " onChange={p.field.onChange} />
-
-                    }
-
-                  }
-                />
+                {
+                  <Controller
+                    name="dueDate"
+                    control={control}
+                    defaultValue={null}
+                    render={(p) => {
+                      console.log(`onChange, value`, p.fields);
+                      return (
+                        <DatePicker
+                          selected={p.field.value}
+                          placeholderText="select date   "
+                          onChange={p.field.onChange}
+                        />
+                      );
+                    }}
+                  />
                 }
-
-
               </Col>
             </Row>
-
 
             <Row className="firstRow">
               <Col md="4">
                 <label for="description">Description</label>
-                <input
-                  type="text"
-                  {...register('Description', {
-
-                  })}
-                />
+                <input type="text" {...register("Description", {})} />
               </Col>
 
               <Col md="4">
                 <label for="price">Price</label>
                 <input
                   type="number"
-                  {...register('unitPrice', {
-                    required: true
-
+                  {...register("unitPrice", {
+                    required: true,
                   })}
                 />
 
                 <p className="para">
                   {errors.unitPrice && "Password is required*"}
                 </p>
-
               </Col>
-
-
-              <Col md="4">
-                <label for="Total">Total</label>
-                <input
-                  type="number"
-                  {...register('total', {
-                    required:true
-
-                  })}
-
-                  
-                />
-                  <p className="para">
-                      {errors.total && "Password is required*"}
-                    </p>
-                
-                </Col>
 
               {/* <Col md="3">
                 <label for="mode of payment">Mode of Payment</label>
@@ -321,7 +251,6 @@ else
                   <option value="Debit Card">Debit Card</option>
                 </select>
               </Col> */}
-
             </Row>
             {/* 
             <Row className="first">
@@ -339,26 +268,26 @@ else
               </Col>
             </Row> */}
             <Row className="firstRow">
-
               <Col md="4">
                 <label for="status">Status</label>
-                <select {...register("status",{required:true})} className="select">
+                <select
+                  {...register("status", { required: true })}
+                  className="select"
+                >
                   <option value="pending">Pending</option>
                   <option value="underReview">Under Review</option>
                   <option value="approved">Approved</option>
                 </select>
 
                 <p className="para">
-                      {errors.status && "Password is required*"}
-                    </p>
+                  {errors.status && "Password is required*"}
+                </p>
               </Col>
-
-
             </Row>
-              
-         {/*mapping newly created data */}
 
-         {/* {addMore.items.map((e) => (
+            {/*mapping newly created data */}
+
+            {addMore.items.map((e, index) => (
               <Row className="first">
                 <Col md="3">
                   <label for="product name">Product Name</label>
@@ -371,88 +300,75 @@ else
                 </Col>
 
                 <Col md="3">
-                <label for="Quantity">Quantity</label>
-                <input
-                  type="text"
-                  {...register("quantity", {
-                    max: 3,
-                  })}
-                />
-              </Col>
+                  <label for="Quantity">Quantity</label>
+                  <input
+                    type="text"
+                    {...register("quantity", {
+                      max: 3,
+                    })}
+                  />
+                </Col>
 
-                  <Col md="4">
-                <label for="description">Description</label>
-                <input
-                  type="text"
-                  {...register('Description', {
+                <Col md="4">
+                  <label for="description">Description</label>
+                  <input type="text" {...register("Description", {})} />
+                </Col>
 
-                  })}
-                />
-              </Col>
+                <Col md="4">
+                  <label for="price">Price</label>
+                  <input type="number" {...register("unitPrice", {})} />
+                </Col>
 
-              <Col md="4">
-                <label for="price">Price</label>
-                <input
-                  type="number"
-                  {...register('unitPrice', {
+                <Col md="4">
+                  <button>+</button>
+                </Col>
+                <Col md="4">
+                  <button onClick={() => deleteItem(e, index)}>-</button>
+                </Col>
+              </Row>
+            ))}
 
-                  })}
-                />
-              </Col>
-
-
-              <Col md="4">
+            <Row>
+              <Col md="12">
                 <label for="Total">Total</label>
                 <input
                   type="number"
-                  {...register('total', {
-
+                  {...register("total", {
+                    required: true,
                   })}
-                /></Col>   
-
-
-
-
-              </Row>
-            ))} */}
-
-
-
-
-
-
-
-
-
-            <Row className="firstRow">
-              <Col className="button-column"  >
-                <button className="addnew-btn" onClick={logoutFun}><i class="far fa-plus-square"> logout </i></button>
+                />
+                <p className="para">
+                  {errors.total && "Password is required*"}
+                </p>
               </Col>
-
             </Row>
 
-            {/* <Row className="firstRow">
-              <Col className="button-column"  >
-                <button className="addnew-btn" onClick={ addItems}><i class="far fa-plus-square"> Add More </i></button>
-              </Col>
-
-            </Row> */}
-
-
-
             <Row className="firstRow">
-              <Col className="button-column"  >
-                <button className="submit-btn" >SUBMIT</button>
+              <Col className="button-column">
+                <button className="addnew-btn" onClick={logoutFun}>
+                  <i class="far fa-plus-square"> logout </i>
+                </button>
               </Col>
-
             </Row>
 
+            <Row className="firstRow">
+              <Col className="button-column">
+                <button className="addnew-btn" onClick={addItems}>
+                  <i class="far fa-plus-square"> Add More </i>
+                </button>
+              </Col>
+            </Row>
+
+            <Row className="firstRow">
+              <Col className="button-column">
+                <button className="submit-btn">SUBMIT</button>
+              </Col>
+            </Row>
           </form>
         </div>
       </Container>
-
     </>
-  )
-}
+  );
+};
 
-export default Form
+export default Form;

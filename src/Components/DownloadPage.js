@@ -27,11 +27,13 @@ const DownloadPage = ({ history }) => {
     dispatch(reviewInvoice(invoiceId));
   };
 
-  const viewFile = (from, to) => {
+  const viewFile = (status, from,address,state) => {
    
     history.push("/view_invoice", {
+      status: status,
       from: from,
-      to: to,
+      address:address,
+      state:state
     });
   };
 
@@ -55,12 +57,13 @@ const DownloadPage = ({ history }) => {
       .catch((error) => {
         console.log(error);
       });
-    //   location.reload();
+   
   };
 
-  //   const updateState = () => {
+  const updatePage = () => {
+      console.log("update Page")
+  }
 
-  //   }
 
   return (
     <div>
@@ -84,10 +87,11 @@ const DownloadPage = ({ history }) => {
               <button onClick={(e) => previewInvoices(e)} id={e._id}>
                 Download Invoice
               </button>
-              <button onClick={() => viewFile(e.status, e.from.companyName)}>
+              <button onClick={() => viewFile(e.status, e.from.companyName,e.from.address,e.from.state)}>
                 View
               </button>
               <button onClick={() => deleteInvoice(e._id)}> Delete </button>
+              <button onClick={() => updatePage()}>Update</button>
             </td>
           </tr>
         ))}
